@@ -303,8 +303,19 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  for (let i = 0; i < arr.length; i += 1) {
+    let leftSum = 0;
+    let rightSum = 0;
+    for (let j = 0; j < i; j += 1) {
+      leftSum += arr[j];
+    }
+    for (let j = i + 1; j < arr.length; j += 1) {
+      rightSum += arr[j];
+    }
+    if (leftSum === rightSum) return i;
+  }
+  return -1;
 }
 
 /**
@@ -328,8 +339,42 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+  }
+  let num = 1;
+  let row = 0;
+  let col = 0;
+  const directions = [
+    { dr: 0, dc: 1 },
+    { dr: 1, dc: 0 },
+    { dr: 0, dc: -1 },
+    { dr: -1, dc: 0 },
+  ];
+  let dirIndex = 0;
+  for (let i = 0; i < size * size; i += 1) {
+    matrix[row][col] = num;
+    num += 1;
+    const nextRow = row + directions[dirIndex].dr;
+    const nextCol = col + directions[dirIndex].dc;
+    if (
+      nextRow >= 0 &&
+      nextRow < size &&
+      nextCol >= 0 &&
+      nextCol < size &&
+      matrix[nextRow][nextCol] === undefined
+    ) {
+      row = nextRow;
+      col = nextCol;
+    } else {
+      dirIndex = (dirIndex + 1) % 4;
+      row += directions[dirIndex].dr;
+      col += directions[dirIndex].dc;
+    }
+  }
+  return matrix;
 }
 
 /**
@@ -347,8 +392,22 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+  const rotatedMatrix = [...matrix];
+
+  for (let i = 0; i < Math.floor(n / 2); i += 1) {
+    for (let j = i; j < n - i - 1; j += 1) {
+      const temp = matrix[i][j];
+
+      rotatedMatrix[i][j] = matrix[n - 1 - j][i];
+      rotatedMatrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
+      rotatedMatrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
+      rotatedMatrix[j][n - 1 - i] = temp;
+    }
+  }
+
+  return rotatedMatrix;
 }
 
 /**
